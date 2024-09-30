@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .input-group-bahagian {
+            position: relative;
+            margin: 20px 0;
+            width: 350px;
+        }
+
+        .input-group-bahagian input, .input-group-bahagian select {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group-bahagian input:focus, .input-group-bahagian select:focus {
+            border-color: #b62218;
+        }
+
+        .input-group-bahagian label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 14px;
+            color: #777;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .input-group-bahagian input:focus + label, 
+        .input-group-bahagian select:focus + label,
+        .input-group-bahagian input:not(:placeholder-shown) + label,
+        .input-group-bahagian select:not(:placeholder-shown) + label {
+            top: -15px;
+            left: 10px;
+            font-size: 12px;
+            color: #b62218;
+            background-color: white;
+            padding: 0 5px;
+        }
+
+        .input-group-bahagian input::placeholder {
+            color: transparent;
+        }
+    </style>
+</head>
+<body>
+    
+</body>
+</html>

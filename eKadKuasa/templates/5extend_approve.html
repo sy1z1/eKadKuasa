@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body, html {
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        header {
+            margin: 10px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        header img {
+            width: 10%;
+        }
+
+        nav {
+            margin-left: auto;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-weight: bold;
+            padding-left: 30px;
+            color: rgb(170, 170, 170);
+        }
+
+        hr {
+            border: 0;
+            height: 1.5px;
+            width: 1530px;
+            position: relative;
+            left: -5px;
+            background-color: #50494767;
+            margin: 20px 0;
+        }
+        .box {
+            display: flex;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            top: 80%;
+            width: 70%;
+            margin-bottom: 100px;
+        }
+        h2{
+            text-align: center;
+            color: rgb(85, 85, 85);
+        }
+        .box-1, .box-2 {
+            flex: 1;
+            margin: 10px;
+        }
+        .box-1 img {
+            width: 100%;
+            max-width: 200px; /* Adjust as needed */
+            border-radius: 10px;
+            object-fit: cover;
+            padding-left: 100px;
+        }
+        .box-2 form {
+            max-width: 600px;
+            margin: auto;
+            padding-top: 50px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="file"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="file"]:focus, select:focus {
+            border-color: #a41a1f;
+            border-radius: 20px;
+            outline: none;
+            transition: 300ms ease-in-out;
+        }
+        .btn {
+            background-color: #7b1318;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            position: relative;
+            top: 20px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #a41a1f;
+        }
+        .box-1 img {
+            width: 200%;
+            max-width: 300px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .box-2 button{
+            border: #7b1318 2px solid;
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #7b1318;
+            padding: 10px 17px;
+        }
+        .box-2 button:hover{
+            background-color: #7b1318;
+            color: white;
+            transition: 200ms ease-in-out;
+        }
+        .kadkuasa-section, .decline-section {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo" class="logo">
+        <nav>
+            <a href="#" class="active" style="color: brown;">Data Management</a>
+            <a href="#">Reports</a>
+        </nav>
+    </header>
+    <hr>
+    <h2>Pending Approval</h2>
+    <div class="box">
+        <div class="box-1">
+            {% if Profile %}
+                <img src="{% url 'profile_image_temp' NoSiri %}" alt="Profile Image">
+            {% else %}
+                <img src="{% static 'default_profile.png' %}" alt="Default Picture">
+            {% endif %}
+        </div>
+        <div class="box-2">
+            <p><strong>NoSiri:</strong> {{ NoSiri }}</p>
+            <p><strong>Password:</strong> {{ Password }}</p>
+            <p><strong>Nama:</strong> {{ Nama }}</p>
+            <p><strong>NoKP:</strong> {{ NoKP }}</p>
+            <p><strong>Jawatan:</strong> {{ Jawatan }}</p>
+            <p><strong>Bahagian:</strong> {{ Bahagian }}</p>
+            <p><strong>Email:</strong> {{ Email }}</p>
+
+            <!-- Button to download both Profile and Sign images as a zip file -->
+            <a href="{% url 'download_images_zip' NoSiri %}" class="btn">Download Images</a>
+    
+            <!-- Hidden section for Decline Reason and Submit button for Decline -->
+            <form method="POST" enctype="multipart/form-data"> <!-- Add method="POST" -->
+                {% csrf_token %}
+                <button type="button" id="approve-btn">Approve</button>
+                <button type="button" id="decline-btn">Decline</button>
+
+                <!-- Hidden section for Kad Kuasa and Submit button -->
+                <div id="kadkuasa-section" style="display: none;" class="kadkuasa-section">
+                    <label for="kadkuasa">Upload Kad Kuasa (PNG):</label>
+                    <input type="file" name="kadkuasa" id="kadkuasa" accept=".png">
+                    <button type="submit" formaction="{% url 'approve_action' NoSiri %}">Submit</button>
+                </div>
+
+                <!-- Hidden section for Decline Reason and Submit button for Decline -->
+                <div id="decline-section" style="display: none;" class="decline-section">
+                    <label for="rejection_reason">Reason for Rejection:</label>
+                    <textarea name="rejection_reason" id="rejection_reason" rows="4"></textarea>
+                    <button type="submit" formaction="{% url 'decline_action' NoSiri %}">Submit Decline</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('approve-btn').addEventListener('click', function() {
+            document.getElementById('kadkuasa-section').style.display = 'block';
+            document.getElementById('kadkuasa').setAttribute('required', 'true'); // Add 'required' attribute
+            document.getElementById('rejection_reason').removeAttribute('required'); // Remove 'required' attribute
+        });
+
+        document.getElementById('decline-btn').addEventListener('click', function() {
+            document.getElementById('decline-section').style.display = 'block';
+            document.getElementById('kadkuasa-section').style.display = 'none';
+            document.getElementById('rejection_reason').setAttribute('required', 'true'); // Add 'required' attribute
+            document.getElementById('kadkuasa').removeAttribute('required'); // Remove 'required' attribute
+        });
+    </script>
+</body>
+</html>

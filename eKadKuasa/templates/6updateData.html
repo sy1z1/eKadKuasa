@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Officer Data</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .container {
+            margin: 10px 20px;
+            width: 800px;
+        }
+        .container h2{
+            text-align: center;
+            position: relative;
+            left: 40%;
+        }
+        header {
+            display: flex;
+            background-color: white;
+            width: 100%;
+        }
+        header img {
+            width: 10%;
+        }
+        nav {
+            position: absolute;
+            right: 30px;
+            top: 45px;
+        }
+        nav a {
+            text-decoration: none;
+            font-weight: bold;
+            padding-left: 30px;
+            color: rgb(170, 170, 170);
+        }
+        hr {
+            border: 0;
+            height: 1.5px;
+            width: 1530px;
+            position: relative;
+            left: -28px;
+            background-color: #50494767;
+            margin: 20px 0;
+        }
+        .box {
+            display: flex;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            top: 80%;
+            left: 40%;
+            right: 40%;
+        }
+        .box-1, .box-2 {
+            flex: 1;
+            margin: 10px;
+        }
+        .box-1 img {
+            width: 100%;
+            max-width: 200px; /* Adjust as needed */
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .box-2 form {
+            max-width: 600px;
+            margin: auto;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="text"], input[type="password"], input[type="file"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, input[type="file"]:focus, select:focus {
+            border-color: #a41a1f;
+            border-radius: 20px;
+            outline: none;
+            transition: 300ms ease-in-out;
+        }
+        .btn {
+            background-color: #7b1318;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #a41a1f;
+        }
+        .box-1 img {
+            width: 200%;
+            max-width: 300px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cosmetic"></div>
+        <header>
+            <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo">
+            <nav>
+                <a href="{% url 'data' %}" class="active" style="color: brown;">Data Management</a>
+                <a href="#">Reports</a>
+            </nav>
+        </header>
+        <hr>
+        <h2>UPDATE OFFICER'S DATA</h2>
+        <div class="box">
+            <div class="box-1">
+                <!-- Display the profile picture if it exists -->
+                {% if officer.Profile %}
+                    <img src="data:image/png;base64,{{ officer.Profile }}" alt="Profile Picture">
+                {% else %}
+                    <img src="{% static 'images (1).png' %}" alt="Default Profile Picture">
+                {% endif %}
+            </div>
+            <div class="box-2">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="nosiri">No Siri:</label>
+                    <input type="text" name="nosiri" value="{{ officer.NoSiri }}" disabled>
+                    <label for="nama">Nama:</label>
+                    <input type="text" name="nama" value="{{ officer.Nama }}">
+                    <label for="bahagian">Link:</label>
+                    <input type="text" name="nama" value="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.Bahagian }}.html">
+                    <label for="jawatan">Jawatan:</label>
+                    <input type="text" name="jawatan" value="{{ officer.Jawatan }}">
+                    <label for="status">Status:</label>
+                    <select name="status">
+                        <option value="1" {% if officer.Status == 1 %}selected{% endif %}>Active</option>
+                        <option value="0" {% if officer.Status == 0 %}selected{% endif %}>Inactive</option>
+                    </select>
+                    <label for="profile_img">Profile Image:</label>
+                    <input type="file" name="profile_img">
+                    <label for="kad_kuasa">Kad Kuasa (PDF):</label>
+                    <input type="file" name="kad_kuasa" accept=".pdf">
+                    <button type="submit" class="btn">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

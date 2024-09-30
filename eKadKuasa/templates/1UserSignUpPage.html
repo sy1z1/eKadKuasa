@@ -1,0 +1,345 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .background {
+    background-image: url("{% static 'loginBg.png' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* This will keep the background fixed */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    z-index: -1;
+    filter: brightness(1.5);
+}
+
+
+        .signup-box {
+            background-color: white;
+            border-radius: 10px;
+            margin-top: 150px;
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .signup-box h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .input-group {
+            position: relative;
+            margin: 20px 0;
+            width: 350px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #b62218;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 14px;
+            color: #777;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .input-group input:focus + label, 
+        .input-group select:focus + label,
+        .input-group input:not(:placeholder-shown) + label,
+        .input-group select:not(:placeholder-shown) + label {
+            top: -15px;
+            left: 10px;
+            font-size: 12px;
+            color: #b62218;
+            background-color: white;
+            padding: 0 5px;
+        }
+
+        .input-group input::placeholder {
+            color: transparent;
+        }
+
+        .input-group-bahagian {
+            position: relative;
+            margin: 20px 0;
+            width: 350px;
+        }
+
+        .input-group-bahagian input, .input-group-bahagian select {
+            width: 330px;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group-bahagian input:focus, .input-group-bahagian select:focus {
+            border-color: #b62218;
+        }
+
+        .input-group-bahagian label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 14px;
+            color: #777;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .input-group-bahagian input:focus + label, 
+        .input-group-bahagian select:focus + label,
+        .input-group-bahagian input:not(:placeholder-shown) + label,
+        .input-group-bahagian select:not(:placeholder-shown) + label {
+            top: -15px;
+            left: 10px;
+            font-size: 12px;
+            color: #b62218;
+            background-color: white;
+            padding: 0 5px;
+        }
+
+        .input-group-bahagian input::placeholder {
+            color: transparent;
+        }
+
+        .signup-box button {
+            background-color: #b62218;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .signup-box button:hover {
+            background-color: #df362a;
+        }
+        .signup-box a{
+            color: #971209;
+            text-decoration: none;
+            padding: 10px;
+            position: relative;
+            top: 10px;
+        }
+        .hide1 button{
+            position: absolute;
+            top: -15px;
+            left: 350px;
+            z-index: 3;
+            width: 40px;
+            height: 30px;
+            border-radius: 30px;
+            background-color: #f68a825e;
+        }
+        .hide1 button img{
+            width: 30px;
+            position: relative;
+            top: -15px;
+            left: -9.5px;
+        }
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            .signup-box {
+                width: 80%; /* Adjust the width for smaller screens */
+                padding: 80px; /* Reduce padding */
+                margin: 30px;
+                position: relative;
+                left: -20px;
+            }
+
+            .signup-box h2 {
+                font-size: 20px;
+            }
+
+            .signup-box input, .login-box button {
+                font-size: 14px;
+                padding: 10px;
+                width: 90%;
+            }
+            .forgot-link {
+                margin-left: 60px;
+            }
+            .input-group-bahagian {
+                margin-left: 0px;
+            }
+            button {
+                margin-left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-box">
+        {% if error404 %}
+            <div class="error-message">
+                <h2>Error</h2>
+                <p>{{ error404 }}</p>
+                <button onclick="location.reload();">Reload Page</button>
+            </div>
+        {% else %}
+            <h2>Daftar Baru</h2>
+            <form method="POST" action="{% url 'user_sign_up' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <input type="email" name="email" placeholder=" " required>
+                    <label>Email</label>
+                    <span id="email-error" style="color:red; display:none;">Email must end with '@aelb.gov.my'.</span>
+                    {% if errorEmail %}
+                        <span id="email-error" style="color:red;">{{ errorEmail }}</span>
+                    {% endif %}
+                </div>
+        
+                <div class="input-group">
+                    <input type="password" name="password" id="password" placeholder=" " required maxlength="8" minlength="8">
+                    <label>Kata Laluan</label>
+                    {% if errorPass %}
+                        <span id="email-error" style="color:red;">{{ errorPass }}</span>
+                    {% endif %}
+                    <div class="hide1">
+                        <button type="button" onclick="togglePassword('password', this)">
+                            <img src="{% static 'passUnhide.png' %}" id="toggle-image">
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder=" " required maxlength="8" minlength="8" oninput="checkPasswordMatch()">
+                    <label>Sahkan Kata Laluan</label>
+                    <div class="hide1">
+                        <button type="button" onclick="togglePassword('confirm_password', this)">
+                            <img src="{% static 'passUnhide.png' %}" id="toggle-image">
+                        </button>
+                    </div>
+                    <span id="password-error" style="color:red; display:none;">Kata laluan tidak sepadan.</span>
+                </div>
+        
+                <div class="input-group">
+                    <input type="text" name="NoKP" placeholder=" " required>
+                    <label>No Kad Pengenalan</label>
+                    {% if errorKP %}
+                        <span id="email-error" style="color:red;">{{ errorKP }}</span>
+                    {% endif %}
+                </div>
+        
+                <div class="input-group">
+                    <input type="file" name="Profile" accept=".jpg,.jpeg,.png" required>
+                    <label for="Profile">Profile Picture (JPG or PNG)</label>
+                    {% if errorProfile %}
+                        <span id="email-error" style="color:red;">{{ errorProfile }}</span>
+                    {% endif %}
+                </div>
+        
+                <div class="input-group">
+                    <input type="file" name="Sign" accept=".jpg,.jpeg,.png" required>
+                    <label for="Sign">Sign (JPG or PNG)</label>
+                    {% if errorSign %}
+                        <span id="email-error" style="color:red;">{{ errorSign }}</span>
+                    {% endif %}
+                </div>
+        
+                <button type="submit">Daftar</button>
+                <a class="register-link" href="{% url 'forgot' %}">Lupa Kata Laluan</a>
+                <a class="forgot-link" href="{% url 'officer_login' %}">Kembali</a>
+            </form>
+        {% endif %}
+    </div>    
+    <div class="background"></div>
+    <script>
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+            
+            // Change the image source based on the current type
+            const img = button.querySelector('img');
+            if (input.type === 'text') {
+                img.src = "{% static 'passHide.png' %}"; // Change to passHide.png when password is visible
+            } else {
+                img.src = "{% static 'passUnhide.png' %}"; // Change back to passUnhide.png when password is hidden
+            }
+        }
+    
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const errorMsg = document.getElementById('password-error');
+            
+            if (confirmPassword && password !== confirmPassword) {
+                errorMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'none';
+            }
+        }
+    
+        function validateEmail() {
+            const emailInput = document.querySelector('input[name="email"]');
+            const email = emailInput.value;
+            const errorMsg = document.getElementById('email-error');
+            
+            if (!email.endsWith('@aelb.gov.my')) {
+                errorMsg.style.display = 'block';
+                emailInput.setCustomValidity("Email must end with '@aelb.gov.my'");
+                return false;
+            } else {
+                errorMsg.style.display = 'none';
+                emailInput.setCustomValidity("");
+                return true;
+            }
+        }
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector('form').onsubmit = function() {
+                return validateEmail();
+            };
+        });
+    </script>    
+</body>
+</html>
+{% endblock %}

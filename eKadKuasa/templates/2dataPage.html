@@ -1,0 +1,332 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATOM Malaysia - Data Management</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const filterSelect = document.getElementById('filterSelect');
+            const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+        
+            function filterTable() {
+                const query = searchInput.value.toLowerCase();
+                const filterBy = filterSelect.value;
+            
+                for (let row of dataTable.rows) {
+                    const cells = row.getElementsByTagName('td');
+                    const cellText = cells[filterBy === 'Nama' ? 1 : filterBy === 'Bahagian' ? 2 : filterBy === 'Jawatan' ? 3 : 4].textContent.toLowerCase();
+                
+                    if (cellText.includes(query)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+        
+            searchInput.addEventListener('keyup', filterTable);
+            filterSelect.addEventListener('change', filterTable);
+        });
+
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+        .container {
+            margin: 10px 20px;
+        }
+        header {
+            display: flex;
+        }
+        header img {
+            width: 10%;
+        }
+        nav {
+            position: absolute;
+            right: 30px;
+            top: 45px;
+        }
+        nav a {
+            text-decoration: none;
+            font-weight: bold;
+            padding-left: 30px;
+            color: rgb(170, 170, 170);
+        }
+        hr {
+            border: 0;
+            height: 1.5px;
+            width: 1530px;
+            position: relative;
+            left: -28px;
+            background-color: #50494767;
+            margin: 20px 0;
+        }
+        .search-add-container {
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: blue ;
+            
+            z-index: 100;
+        }
+        input[type="text"] {
+            width: 50%;
+            padding: 12px;
+            margin-bottom: 10px;
+            margin-right: 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #a41a1f;
+            border-radius: 20px;
+            outline: none;
+            transition: 300ms ease-in-out;
+        }
+        select {
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            margin-right: 30px;
+            border: 1px solid #ddd;
+        }
+        select:focus {
+            border-color: #a41a1f;
+            border-radius: 20px;
+            outline: none;
+            transition: 300ms ease-in-out;
+        }
+
+        .search-add-container a{
+            color: #c9c8c8;
+            text-decoration: none;
+            position: relative;
+            left: 180px;
+        }
+        .search-add-container a:hover{
+            color: #7b1318;
+            transition: 300ms ease-in-out;
+        }
+        /* Add or modify this CSS */
+
+        table {
+    width: 100%;
+    border-collapse: collapse; /* Use collapse for tighter control */
+    margin: 20px 0;
+    border-radius: 15px; /* Add rounded corners to the table */
+    overflow: hidden; /* Ensure content doesn't overflow the rounded corners */
+}
+
+th {
+    background-color: #7b1318;
+    color: #ffffff;
+    text-align: center;
+    padding: 15px;
+}
+
+td {
+    padding: 5px; /* No padding to maintain collapse effect */
+    transition: height 0.3s ease; /* Smooth height transition */
+}
+
+.profile-container {
+    height: 0; /* Initially collapsed */
+    overflow: hidden; /* Hide overflow content */
+    transition: height 0.3s ease; /* Smooth transition on height change */
+}
+
+.profile-img-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px; /* Ensure a specific height for the wrapper */
+    opacity: 30%; /* Initially hide the profile image */
+    transition: opacity 0.3s ease; /* Smooth opacity transition */
+}
+
+.profile-img {
+    width: 60px; /* Default image size */
+    height: 60px; /* Keep proportions */
+    border-radius: 50%; /* Circular profile image */
+    object-fit: cover;
+}
+
+tbody tr {
+    height: 40px; /* Initial row height */
+    transition: height 0.3s ease; /* Smooth height transition for rows */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Gray background for even rows */
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* White background for odd rows */
+}
+
+tr:hover {
+    background-color: #e0e0e0; /* Change background on hover */
+}
+
+tr:hover .profile-container {
+    height: 60px; /* Expand row height on hover */
+}
+
+tr:hover .profile-img-wrapper {
+    opacity: 1; /* Show profile image on hover */
+}
+
+/* For rounded corners on table */
+tbody tr:first-child td:first-child {
+    border-top-left-radius: 15px; /* Rounded corners for the first row */
+}
+
+tbody tr:first-child td:last-child {
+    border-top-right-radius: 15px; /* Rounded corners for the first row */
+}
+
+tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 15px; /* Rounded corners for the last row */
+}
+
+tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 15px; /* Rounded corners for the last row */
+}
+
+.status {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; /* Make the status indicator circular */
+}
+
+.status.green {
+    background-color: #6cc04a; /* Green for active status */
+}
+
+.status.red {
+    background-color: #f44336; /* Red for inactive status */
+}
+
+/* Optional: Center text in table cells */
+td, th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.search-add-container a {
+            color: grey;
+            text-decoration: none;
+        }
+
+        .search-add-container a.need-approval {
+            color: #901219;
+            animation: heartbeat 1.5s infinite;
+            font-weight: bold;
+        }
+        .btn img{
+            margin-left: 40px;
+            width: 30px;
+        }
+        .download-icon {
+            transition: 0.3s ease; /* Smooth transition when changing the image */
+        }
+
+        .btn:hover .download-icon {
+            content: url("{% static 'dwRed.png' %}"); /* Change to a new image on hover */
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo" class="logo">
+            <nav>
+                <a href="#" class="active" style="color: brown;">Data Management</a>
+                <a href="{% url 'report' %}">Reports</a>
+            </nav>
+        </header>
+
+        <hr>
+
+        <div class="search-add-container">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <select id="filterSelect">
+                <option value="Nama">Filter by Nama</option>
+                <option value="Bahagian">Filter by Bahagian</option>
+                <option value="Jawatan">Filter by Jawatan</option>
+                <option value="Status">Filter by Status</option>
+            </select>            
+            <a href="{% url 'approve' %}" class="{% if has_pending %}need-approval{% endif %}">
+                {% if has_pending %}Need Approval{% else %}No Approval{% endif %}
+            </a>
+
+            <a href="{% url 'download_officer_pdf' %}" class="btn"><img src="{% static 'dwGrey.png' %}" class="download-icon"></a>
+        </div>
+
+        {% if officers %}
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Profile</th>
+                        <th>Nama</th>
+                        <th>Link</th>
+                        <th>Jawatan</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for officer in officers %}
+                    <tr onclick="window.location.href=`{% url 'update' officer.0 %}`">
+                        <td class="profile-container">
+                            <div class="profile-img-wrapper">
+                                {% if officer.5 %}
+                                    <img src="{% url 'profile_image' officer.0 %}?type=profile" alt="Profile Image" class="profile-img">
+                                {% else %}
+                                    <img src="{% static 'images (2).png' %}" alt="Default Profile Image" class="profile-img">
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ officer.1 }}</td>
+                        <td>
+                            <a href="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.2 }}.html" style="z-index: 10;" target="_blank">
+                                {{ officer.2 }}
+                            </a>
+                        </td>
+                        <td>{{ officer.3 }}</td>
+                        <td><span class="status {% if officer.4 %}green{% else %}red{% endif %}"></span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+        {% else %}
+            <p>No existing data</p>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'scripts.js' %}"></script>
+</body>
+</html>

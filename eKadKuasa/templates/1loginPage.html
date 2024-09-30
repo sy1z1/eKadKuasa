@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: rgba(255, 251, 251, 0.851);
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            background-color: rgb(255, 255, 255);
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 10%;
+            display: grid;
+            place-items: center;
+            padding: 2%;
+            padding-bottom: 5%;
+            border-radius: 10px; /* Rounded corners for the container */
+            box-shadow: 0 4px 50px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+        }
+
+        .main img{
+            width: 30%;
+        }
+
+        .textBox {
+            width: 100%; /* Full width of the container */
+            max-width: 400px; /* Limit the maximum width */
+            display: grid;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px; /* Space between inputs */
+            border: 1px solid #ddd;
+            border-radius: 20px; /* Rounded corners for inputs */
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #007bff; /* Highlight border on focus */
+            outline: none;
+        }
+
+        button {
+            width: 80%;
+            padding: 12px;
+            margin-left: 10%;
+            background-color: #b50101;
+            color: white;
+            border: none;
+            border-radius: 20px; /* Rounded corners for the button */
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d50202; /* Darker blue on hover */
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+            color: red;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+        .alert {
+            text-align: center;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    {% load static %}
+    <div class="main">
+        <img src="{% static 'images.png' %}" alt="Logo" style="max-width: 100%; height: auto; border-radius: 10px;">
+        <div class="textBox">
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" id="username" name="username" placeholder="Username">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <button type="submit">Masuk</button>
+            </form>
+            {% if message %}
+                <div class="alert"><p>{{ message }}</p></div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

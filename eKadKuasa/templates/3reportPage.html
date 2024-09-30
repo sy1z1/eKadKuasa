@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .container {
+            margin: 10px 20px;
+        }
+        header {
+            display: flex;
+        }
+        header img {
+            width: 10%;
+        }
+        nav {
+            position: absolute;
+            right: 30px;
+            top: 45px;
+        }
+        nav a {
+            text-decoration: none;
+            font-weight: bold;
+            padding-left: 30px;
+            color: rgb(170, 170, 170);
+        }
+        hr {
+            border: 0;
+            height: 1.5px;
+            width: 1530px;
+            position: relative;
+            left: -28px;
+            background-color: #50494767;
+            margin: 20px 0;
+        }
+        .container h1{
+            text-align: center;
+            color: rgb(71, 71, 71);
+        }
+        canvas {
+            max-width: 70%; /* Ensure the canvas scales with the container */
+            max-height: 500px; /* Adjust the max height as needed */
+            margin-right: 50px;
+        }
+        #barChart {
+            width: 100%; /* Full width of the container */
+            height: 500px; /* Adjust height as needed */
+        }
+        .display{
+            display: flex;
+            width: 90%;
+            justify-content: center;
+            align-items: center;
+            margin-left: 5%;
+        }
+    .display-2 {
+        position: relative;
+        top: -150px;
+        width: 600px;
+    }
+    .display-2 ul {
+        list-style: none; /* Remove default bullets */
+        padding: 0;
+    }
+    .display-2 li {
+        position: relative;
+        padding-left: 20px; /* Space for custom bullet */
+        margin-bottom: 10px;
+    }
+    a {
+        text-decoration: none;
+    }
+    .display-2 li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 27%;
+        transform: translateY(-50%);
+        width: 10px; /* Size of the bullet */
+        height: 10px; /* Size of the bullet */
+        background-color: rgb(188, 26, 26); /* Bullet color */
+        border-radius: 50%; /* Makes the bullet circular */
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo" class="logo">
+            <nav>
+                <a href="{% url 'data' %}" >Data Management</a>
+                <a href="{% url 'report' %}" class="active" style="color: brown;">Reports</a>
+            </nav>
+        </header>
+
+        <hr>
+
+        <h1>Monthly Report ({{ month_name }})</h1>
+        <div class="display">
+            <canvas id="barChart"></canvas>
+            <div class="display-2">
+                <ul>
+                {% for officer in unique_officers %}
+                    {% if not officer.2 %} <!-- Status check (False or 0) -->
+                        <li>
+                            <a href="{% url 'personal' officer.0 %}" style="color: rgb(188, 26, 26); font-weight: bold;">
+                                {{ officer.1 }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'personal' officer.0 %}" style="color: #3a3736bd;">
+                                {{ officer.1 }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <script>
+            var ctx = document.getElementById('barChart').getContext('2d');
+            var barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ dates|safe }},
+                    datasets: [{
+                        label: 'Number of Records',
+                        data: {{ counts|safe }},
+                        backgroundColor: 'rgba(139, 0, 0, 1)',  // Deep red color
+                        borderColor: 'rgba(139, 0, 0, 0.8)',      // Deep red border color
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,  // Allows canvas to be resized based on CSS
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Records'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

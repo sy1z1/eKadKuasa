@@ -1,0 +1,415 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #FF5F64;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Basic Header Styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #FF5F64;
+            margin: 20px 20px;
+        }
+
+        /* Menu Bar Icon (Hamburger) */
+        .menu-icon {
+            cursor: pointer;
+            display: inline-block;
+            z-index: 5;
+        }
+
+        .menu-icon span {
+            display: block;
+            width: 30px;
+            height: 4px;
+            margin: 5px;
+            background-color: #fbfbfb;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+            z-index: 5;
+        }
+
+        /* Profile Button */
+        .profile-button {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .profile-content {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(169, 169, 169, 0.693);
+        }
+
+        .profile-content img {
+    width: 45px; /* Set width and height to the same value */
+    height: 45px; /* Ensure height matches width */
+    border-radius: 50%; /* Make the image circular */
+    object-fit: cover; /* Ensure the image covers the circle without distortion */
+    margin-right: 10px; /* Space between the image and text */
+}
+
+
+        .profile-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Dropdown Menu */
+        .hidden-menu {
+            position: absolute;
+            top: 60px;
+            left: -200px; /* Start off-screen */
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 0 10px;
+            padding: 10px 0;
+            transition: left 0.3s ease-in-out; /* Sliding animation */
+            z-index: 2;
+            height: 90%;
+            width: 10%;
+        }
+
+        .show-menu {
+            left: 0px; /* Slide into view */
+        }
+
+        .hidden-menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hidden-menu ul li {
+            padding: 10px 20px;
+        }
+
+        .hidden-menu ul li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .hidden-menu ul li a:hover {
+            background-color: #f0f0f0;
+            color: #000;
+        }
+
+        .profile img {
+            width: 100px; /* Profile image size */
+            height: auto;
+            border-radius: 50%; /* Circular profile picture */
+        }
+
+        .body {
+            background-color: #FF5F64;
+            position: relative;
+            width: 100%;
+            height: 700px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Hide any overflow */
+        }
+
+        .body img {
+            width: auto; /* Adjust the width as needed */
+        }
+
+        .qr-code img {
+            position: absolute;
+            width: 7%; /* Smaller QR code size */
+            top: 210px;
+            left: 873px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* QR Code Modal */
+        .qr-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(215, 215, 215, 0.292); /* Semi-transparent background */
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .qr-modal.show {
+            display: flex; /* Show the modal */
+        }
+
+        .qr-modal .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001; /* Make sure the close button is on top */
+        }
+
+        .qr-modal img {
+            width: 30%; /* Adjust size of QR code in the modal */
+            height: auto;
+            border-radius: 10px;
+            z-index: 1001; /* Ensure image is on top of the blur effect */
+        }
+
+        .qr-text {
+            background-color: white;
+            position: absolute;
+            top: 550px;
+            width: 30%;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+        }
+        .blur-effect {
+            backdrop-filter: blur(8px);
+            position: absolute;
+            width: 140px;
+            height: 153px;
+            top: 109px;
+            left: 547px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .blur-effect img {
+            width: 50%;
+            filter: invert(100);
+        }
+
+        .blur-effect.hidden {
+            display: none; /* Hide the element */
+        }
+        .pdfKadKuasa {
+            position: relative;
+            bottom: 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pdf {
+            background-color: white;
+            border-radius: 10px;
+            width: 20%;
+            margin: 20px;
+            padding: 10px 40px;
+        }
+        .pdf a{
+            text-decoration: none;
+            color: #FF5F64;
+            font-weight: bolder;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .content {
+                width: 100%; /* Adjust content width for smaller screens */
+            }
+
+            .profile img {
+                width: 80px; /* Adjust profile image size for mobile */
+            }
+            .hidden-menu {
+                position: absolute;
+                top: 60px;
+                left: -200px; /* Start off-screen */
+                background-color: #fff;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 0 10px;
+                padding: 10px 0;
+                transition: left 0.3s ease-in-out; /* Sliding animation */
+                z-index: 2;
+                height: 90%;
+                width: 30%;
+            }
+            .show-menu {
+                left: 0px; /* Slide into view */
+            }
+
+            .body img {
+                width: 100%; /* KadKuasa image stays full width */
+                position: absolute;
+                top: -100px;
+            }
+
+            .qr-code img {
+                width: 16%; /* Adjust QR code size for mobile */
+                top: 130px; /* Adjust top position for smaller screens */
+                left: 270px; /* Adjust left position for smaller screens */
+                border-radius: 10px;
+            }
+            .blur-effect {
+                position: relative;
+                top: -230px;
+                left: -90px;
+                width: 21%;
+                height: 15%;
+                border: rgb(133, 0, 0) solid;
+                box-shadow: 0 4px 8px rgba(117, 0, 0, 0.5);
+            }
+            .blur-effect img{
+                width: 10%;
+            }
+            .qr-modal img {
+                width: 80%; /* Adjust size of QR code in the modal */
+                height: auto;
+                border-radius: 10px;
+                z-index: 1001; /* Ensure image is on top of the blur effect */
+                position: absolute;
+                top: 200px;
+            }
+            .qr-text {
+                background-color: white;
+                position: absolute;
+                top: 495px;
+                width: 80%;
+                text-align: center;
+                border-radius: 0 0 10px 10px;
+            }
+            .pdfKadKuasa {
+                position: absolute;
+                top: 400px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>
+            <div class="menu-bar-icon" onclick="toggleMenu()">
+                <!-- Simple hamburger icon -->
+                <div class="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            
+            <div class="profile-button">
+                <a href="#" class="profile-link">
+                    <div class="profile-content">
+                        {% if officer.Profile %}
+                            <img src="data:image/jpeg;base64,{{ officer.Profile }}" alt="Profile Image">
+                        {% else %}
+                            <p>No profile image available.</p>
+                        {% endif %}
+                        <p class="profile-name">{{ officer.Nama }}</p>
+                    </div>
+                </a>
+            </div>
+        </header>
+        
+        <!-- Hidden dropdown menu -->
+        <nav id="menu" class="hidden-menu">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <div class="body">
+            {% if officer.KadKuasa %}
+                <img src="data:image/png;base64,{{ officer.KadKuasa }}" alt="Kad Kuasa Image">
+            {% else %}
+                <p>No Kad Kuasa available.</p>
+            {% endif %}
+    
+            <!-- Display QR Code -->
+            <div class="qr-code" onclick="showQrModal()">
+                <img src="data:image/png;base64,{{ officer.QRCode }}" alt="QR Code">
+            </div>
+            <div class="blur-effect" onclick="toggleBlurEffect()">
+                <img src="{% static 'hide-icon.png' %}">
+            </div>
+        </div>
+    
+        <!-- QR Code Modal -->
+        <div class="qr-modal" id="qrModal">
+            <div class="close" onclick="hideQrModal()">&times;</div>
+            <img src="data:image/png;base64,{{ officer.QRCode }}" alt="QR Code">
+            <div class="qr-text"><p>Scan dan masukkan maklumat yang diperlukan</p></div>
+        </div>
+
+        <div class="pdfKadKuasa">
+            <div class="pdf">
+                <a href="{% url 'pdfkadkuasa' %}">PDF KAD KUASA</a>
+            </div>
+        </div>
+    
+        <script>
+            function toggleMenu() {
+                const menu = document.getElementById('menu');
+                menu.classList.toggle('show-menu');
+            }
+    
+            function showQrModal() {
+                const modal = document.getElementById('qrModal');
+                modal.classList.add('show');
+                
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        hideQrModal();
+                    }
+                });
+            }
+    
+            function hideQrModal() {
+                const modal = document.getElementById('qrModal');
+                modal.classList.remove('show');
+            }
+    
+            function toggleBlurEffect() {
+                const blurEffect = document.querySelector('.blur-effect');
+                blurEffect.classList.toggle('hidden');
+
+                // Additional logic to ensure the blur effect is reapplied if needed
+                if (!blurEffect.classList.contains('hidden')) {
+                    // Ensure the blur effect is visible if it's not hidden
+                    blurEffect.style.display = 'flex';
+                } else {
+                    // Hide the blur effect
+                    blurEffect.style.display = 'none';
+                }
+            }
+
+        </script>
+    </body>
+    </html>

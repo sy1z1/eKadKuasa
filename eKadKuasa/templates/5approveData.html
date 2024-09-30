@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Data</title>
+    <style>
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        header {
+            margin: 10px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        header img {
+            width: 10%;
+        }
+
+        nav {
+            margin-left: auto;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-weight: bold;
+            padding-left: 30px;
+            color: rgb(170, 170, 170);
+        }
+
+        hr {
+            border: 0;
+            height: 1.5px;
+            width: 1530px;
+            position: relative;
+            left: -5px;
+            background-color: #50494767;
+            margin: 20px 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .bubble {
+            width: 95%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .bubble:hover{
+            background-color: #ffe7e8;
+            transition: 300ms ease-in-out;
+            border: 1px solid #b14d528f;
+        }
+
+        .bubble img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .bubble .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bubble .name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bubble .nosiri {
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo" class="logo">
+        <nav>
+            <a href="{% url 'data' %}" class="active" style="color: brown;">Data Management</a>
+            <a href="{% url 'report' %}">Reports</a>
+        </nav>
+    </header>
+    <hr>
+    <div class="container">
+        {% for officer in pending_officers %}
+        <div class="bubble" onclick="window.location.href=`{% url 'extend_approve' officer.NoSiri %}`">
+            {% if officer.0 %}
+                <img src="data:image/jpg;base64,{{ officer.Profile }}" alt="Profile Image">
+            {% else %}
+                <img src="{% static 'appLogo.png' %}" alt="Default Profile Image">
+            {% endif %}
+            <div class="details">
+                <div class="name">{{ officer.Nama }}</div>
+                <div class="nosiri">{{ officer.NoSiri }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
