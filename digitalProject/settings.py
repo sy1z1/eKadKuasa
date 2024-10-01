@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a7$j0b)ba%#d_puh2cq338h294)@83&82m=5z4wa(!d4kbad#('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -93,13 +94,6 @@ DATABASES = {
     }
 }
 
-import firebase_admin
-from firebase_admin import credentials
-
-# Use a raw string or double backslashes to avoid issues with escape characters
-cred = credentials.Certificate(r"C:\Users\Muhammad Danish\Document\Intern Projek\EKadKuasa\ekadkuasav2-firebase-adminsdk-u44fp-69971b7dfb.json")
-firebase_admin.initialize_app(cred)
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -140,6 +134,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

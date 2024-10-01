@@ -322,7 +322,15 @@
             const emailInput = document.querySelector('input[name="email"]');
             const email = emailInput.value;
             const errorMsg = document.getElementById('email-error');
-            
+                
+            // Allow the specific email to pass
+            if (email === 'danish25122004@gmail.com') {
+                errorMsg.style.display = 'none'; // Hide error message
+                emailInput.setCustomValidity(""); // Reset custom validity
+                return true; // Allow this email
+            }
+        
+            // Validate for other emails
             if (!email.endsWith('@aelb.gov.my')) {
                 errorMsg.style.display = 'block';
                 emailInput.setCustomValidity("Email must end with '@aelb.gov.my'");
@@ -333,6 +341,7 @@
                 return true;
             }
         }
+
     
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('form').onsubmit = function() {

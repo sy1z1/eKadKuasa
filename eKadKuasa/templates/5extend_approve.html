@@ -144,7 +144,7 @@
     <div class="box">
         <div class="box-1">
             {% if Profile %}
-                <img src="{% url 'profile_image_temp' NoSiri %}" alt="Profile Image">
+                <img src="{{ Profile }}" alt="Profile Image">
             {% else %}
                 <img src="{% static 'default_profile.png' %}" alt="Default Picture">
             {% endif %}

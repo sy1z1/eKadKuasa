@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Data Management</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInput');
@@ -299,24 +298,24 @@ td, th {
                 </thead>
                 <tbody>
                     {% for officer in officers %}
-                    <tr onclick="window.location.href=`{% url 'update' officer.0 %}`">
+                    <tr onclick="window.location.href=`{% url 'update' officer.NoSiri %}`">
                         <td class="profile-container">
                             <div class="profile-img-wrapper">
-                                {% if officer.5 %}
-                                    <img src="{% url 'profile_image' officer.0 %}?type=profile" alt="Profile Image" class="profile-img">
+                                {% if officer.Profile %}
+                                    <img src="{{ officer.Profile }}" alt="Profile Images" class="profile-img"/>
                                 {% else %}
-                                    <img src="{% static 'images (2).png' %}" alt="Default Profile Image" class="profile-img">
+                                    No Image
                                 {% endif %}
                             </div>
                         </td>
-                        <td>{{ officer.1 }}</td>
+                        <td>{{ officer.Nama }}</td>
                         <td>
-                            <a href="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.2 }}.html" style="z-index: 10;" target="_blank">
-                                {{ officer.2 }}
+                            <a href="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.NoSiri }}.html" style="z-index: 10;" target="_blank">
+                                {{ officer.NoSiri }}
                             </a>
                         </td>
-                        <td>{{ officer.3 }}</td>
-                        <td><span class="status {% if officer.4 %}green{% else %}red{% endif %}"></span></td>
+                        <td>{{ officer.Jawatan }}</td>
+                        <td><span class="status {% if officer.Status %}green{% else %}red{% endif %}"></span></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -326,7 +325,5 @@ td, th {
             <p>No existing data</p>
         {% endif %}
     </div>
-
-    <script src="{% static 'scripts.js' %}"></script>
 </body>
 </html>

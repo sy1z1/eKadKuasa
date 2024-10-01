@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 from .views import OfficerListView
 
@@ -20,7 +22,6 @@ urlpatterns = [
     path('user_data/', views.user_data, name="user_data"),
     path('pdfkadkuasa/', views.pdfkadkuasa, name="pdfkadkuasa"),
     path('user_authorized/', views.user_authorized, name="user_authorized"),
-    path('profile_image/<str:no_siri>/', views.profile_image, name='profile_image'),
     path('profile_image_temp/<str:no_siri>/', views.profile_image_temp, name='profile_image_temp'),
     path('api/officers/', OfficerListView.as_view(), name='officer_list_api'),
     path('download_profile_image/<str:no_siri>/', views.download_profile_image, name='download_profile_image'),
@@ -33,5 +34,8 @@ urlpatterns = [
     #path('api/user_sign_up/', views.user_sign_up, name='user_sign_up'),
     #ath('api/user_data/', views.user_data, name='user_data'),  # API endpoint for user data
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #download_images_zip

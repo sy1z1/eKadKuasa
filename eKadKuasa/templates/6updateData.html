@@ -128,7 +128,7 @@
             <div class="box-1">
                 <!-- Display the profile picture if it exists -->
                 {% if officer.Profile %}
-                    <img src="data:image/png;base64,{{ officer.Profile }}" alt="Profile Picture">
+                    <img src="{{ officer.Profile }}" alt="Profile Picture">
                 {% else %}
                     <img src="{% static 'images (1).png' %}" alt="Default Profile Picture">
                 {% endif %}
@@ -141,7 +141,7 @@
                     <label for="nama">Nama:</label>
                     <input type="text" name="nama" value="{{ officer.Nama }}">
                     <label for="bahagian">Link:</label>
-                    <input type="text" name="nama" value="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.Bahagian }}.html">
+                    <input type="text" name="link" value="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.Bahagian }}.html">
                     <label for="jawatan">Jawatan:</label>
                     <input type="text" name="jawatan" value="{{ officer.Jawatan }}">
                     <label for="status">Status:</label>
@@ -150,9 +150,9 @@
                         <option value="0" {% if officer.Status == 0 %}selected{% endif %}>Inactive</option>
                     </select>
                     <label for="profile_img">Profile Image:</label>
-                    <input type="file" name="profile_img">
-                    <label for="kad_kuasa">Kad Kuasa (PDF):</label>
-                    <input type="file" name="kad_kuasa" accept=".pdf">
+                    <input type="file" name="profile_img" accept=".jpg,.jpeg,">
+                    <label for="kad_kuasa">Kad Kuasa (PNG):</label>
+                    <input type="file" name="kad_kuasa" accept=".png">
                     <button type="submit" class="btn">Update</button>
                 </form>
             </div>

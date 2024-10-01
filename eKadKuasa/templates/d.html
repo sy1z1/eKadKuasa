@@ -1,58 +1,132 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <style>
-        .input-group-bahagian {
-            position: relative;
-            margin: 20px 0;
-            width: 350px;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #b70707;
+            color: white;
+            overflow-x: hidden;
         }
-
-        .input-group-bahagian input, .input-group-bahagian select {
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            align-items: center;
             width: 100%;
-            padding: 10px 10px 10px 40px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s ease;
         }
-
-        .input-group-bahagian input:focus, .input-group-bahagian select:focus {
-            border-color: #b62218;
+        .profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
         }
-
-        .input-group-bahagian label {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 14px;
-            color: #777;
-            pointer-events: none;
-            transition: 0.3s ease all;
+        .welcome-text {
+            font-size: 18px;
+            font-weight: bold;
         }
-
-        .input-group-bahagian input:focus + label, 
-        .input-group-bahagian select:focus + label,
-        .input-group-bahagian input:not(:placeholder-shown) + label,
-        .input-group-bahagian select:not(:placeholder-shown) + label {
-            top: -15px;
-            left: 10px;
-            font-size: 12px;
-            color: #b62218;
+        .card {
             background-color: white;
-            padding: 0 5px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.3s ease-in-out;
+            color: black;
         }
-
-        .input-group-bahagian input::placeholder {
-            color: transparent;
+        .card:hover {
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+        .bottom-card {
+            margin-top: 10px;
+            padding: 15px;
+        }
+        .qr-code {
+            margin-top: 20px;
+            width: 150px;
+            height: 150px;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+            padding: 5px 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .card-container {
+            width: 103%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers the card horizontally */
+            justify-content: center; /* Centers the card vertically */
+            background-color: white;
+            border-radius: 10% 10% 0 0;
+            padding-bottom: 20%;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        #view2 {
+            display: none;
+            animation: fadeIn 0.5s;
         }
     </style>
 </head>
 <body>
-    
+    <!-- View 1 -->
+    <div id="view1" class="container">
+        <div class="header">
+            <img src="{{ officer.ProfileURL }}" alt="Profile" class="profile-img">
+            <div class="welcome-text">Welcome, {{ officer.Nama }}</div>
+        </div>
+        <div class="card-container">
+            <div class="card" onclick="showView2()">
+                <img src="data:image/png;base64,{{ officer.KadKuasa }}" alt="KadKuasa" style="width:100%">
+            </div>
+            <div class="card bottom-card">
+                <img src="{% static 'kadKuasaBelakang.png' %}" alt="Local Kad" style="width:100%">
+            </div>
+        </div>
+    </div>
+
+    <!-- View 2 (Hidden Initially) -->
+    <div id="view2" class="container">
+        <div class="back-button" onclick="showView1()">← Back</div>
+        <div class="card">
+            <img src="data:image/png;base64,{{ officer.KadKuasa }}" alt="KadKuasa" style="width:100%">
+        </div>
+        <img src="data:image/png;base64,{{ officer.QRCode }}" alt="QR Code" class="qr-code">
+    </div>
+
+    <script>
+        function showView2() {
+            document.getElementById('view1').style.display = 'none';
+            document.getElementById('view2').style.display = 'flex';
+        }
+
+        function showView1() {
+            document.getElementById('view1').style.display = 'flex';
+            document.getElementById('view2').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

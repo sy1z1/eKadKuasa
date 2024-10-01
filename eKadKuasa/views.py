@@ -61,7 +61,7 @@ def h(request):
         box_size=10,
         border=4,
     )
-    qr.add_data('http://10.2.12.227:8000/officer_login/')
+    qr.add_data('http://10.2.12.226:8000/officer_login/')
     qr.make(fit=True)
 
     # Create an image from the QR code
@@ -187,44 +187,42 @@ def check_token(token):
         return None  # Invalid token
 
 
-from django.db import connection
-
-def data(request):
-    query = request.GET.get('query', '')
-    filter_by = request.GET.get('filter_by', 'Nama')
-
+def data(request, filter_by='Nama', query=''):
     with connection.cursor() as cursor:
+        # SQL query with filtering (adjusted for your `filter_by` field)
         query_sql = f"""
-        SELECT NoSiri, Nama, Bahagian, Jawatan, Status, Profile
-        FROM officer
-        WHERE {filter_by} LIKE %s
+            SELECT NoSiri, Nama, Bahagian, Jawatan, Status, Profile
+            FROM officer
+            WHERE {filter_by} LIKE %s
         """
+        # Execute the query with parameterized input to avoid SQL injection
         cursor.execute(query_sql, [f'%{query}%'])
-        officers = cursor.fetchall()
-    
-    # Check for pending statuses in temp_officer
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM temp_officer WHERE Stat = 'Pending'")
-        pending_count = cursor.fetchone()[0]
+        officers_raw = cursor.fetchall()  # Fetch all officers' data
 
-    logger.debug(f"Officers data: {officers}")  # Log the data
+    # Process the raw data into dictionaries for template use
+    officers = []
+    for row in officers_raw:
+        officer = {
+            'NoSiri': row[0],
+            'Nama': row[1],
+            'Bahagian': row[2],
+            'Jawatan': row[3],
+            'Status': row[4],
+            'Profile': None  # Initialize Profile with None
+        }
+        
+        # Convert base64 string to data URL for image display
+        if row[5]:  # Check if Profile is not None
+            # Assuming the Profile field is base64 encoded string
+            officer['Profile'] = f"data:image/jpeg;base64,{row[5].decode('utf-8')}"
+        
+        officers.append(officer)
 
+    # Pass the processed data to the template
     context = {
-        'officers': officers,
-        'has_pending': pending_count > 0
+        'officers': officers
     }
-
-    return render(request, "2dataPage.html", context)
-
-
-
-from django.db import connection
-from datetime import datetime
-
-from django.db import connection
-from datetime import datetime
-
-from datetime import datetime, timedelta
+    return render(request, '2dataPage.html', context)
 
 def report(request):
     today = datetime.today()
@@ -271,10 +269,6 @@ def report(request):
 
     return render(request, "3reportPage.html", context)
 
-
-
-
-
 from django.db import connection
 from datetime import datetime
 
@@ -292,7 +286,6 @@ def personal(request, no_siri):
         officer_data = cursor.fetchone()
 
         if officer_data is None:
-            # Handle the case where the officer does not exist
             return render(request, "404.html", status=404)
 
         today = datetime.today()
@@ -330,7 +323,7 @@ def personal(request, no_siri):
         'Bahagian': officer_data[4],
         'Email': officer_data[5],
         'Status': officer_data[6],
-        'Profile': officer_data[7],
+        'Profile': f"data:image/jpeg;base64,{officer_data[7].decode('utf-8')}",
         'month_name': today.strftime('%B')  # Current month
     }
 
@@ -356,7 +349,7 @@ def approve(request):
         # Loop through officers and convert their profile image to base64
         for officer in officers:
             if officer[2]:  # Check if profile image exists
-                profile_base64 = base64.b64encode(officer[2]).decode('utf-8')
+                profile_base64 = f"data:image/jpeg;base64,{officer[2].decode('utf-8')}"
             else:
                 profile_base64 = None
             
@@ -398,8 +391,8 @@ def extend_approve(request, no_siri):
             'Jawatan': officer_data[4],
             'Bahagian': officer_data[5],
             'Email': officer_data[6],
-            'Profile': officer_data[7],
-            'Sign': officer_data[8],
+            'Profile': f"data:image/jpeg;base64,{officer_data[7].decode('utf-8')}",
+            'Sign': f"data:image/jpeg;base64,{officer_data[8].decode('utf-8')}",
             'Stat': officer_data[9]
         }
         return render(request, '5extend_approve.html', context)
@@ -571,7 +564,7 @@ def update(request, no_siri):
     if request.method == 'POST':
         # Fetch form data
         nama = request.POST.get('nama')
-        bahagian = request.POST.get('Bahagian')
+        bahagian = request.POST.get('link')
         jawatan = request.POST.get('jawatan')
         status = request.POST.get('status')
 
@@ -582,7 +575,8 @@ def update(request, no_siri):
         # Handle Profile Image
         profile_img_data = None
         if profile_img:
-            profile_img_data = profile_img.read()
+            profile_file = ContentFile(profile_img.read())
+            profile_img_data = base64.b64encode(profile_file.read()).decode('utf-8')
         else:
             # Fetch the existing image if no new image is uploaded
             with connections['default'].cursor() as cursor:
@@ -616,7 +610,7 @@ def update(request, no_siri):
         officer = cursor.fetchone()
 
     # Convert binary image data to base64 for rendering in HTML
-    profile_base64 = base64.b64encode(officer[5]).decode('utf-8') if officer[5] else None
+    profile_base64 = f"data:image/jpeg;base64,{officer[5].decode('utf-8')}" if officer[5] else None
 
     context = {
         'officer': {
@@ -1083,6 +1077,16 @@ def officer_login(request):
     return render(request, "1UserLoginPage.html", {'message':message})
 
 
+import base64
+from django.core.files.base import ContentFile
+from django.db import connection, IntegrityError
+
+from django.core.files.base import ContentFile
+from django.db import IntegrityError
+from django.shortcuts import render, redirect
+import base64
+from django.db import connection
+
 def user_sign_up(request):
     if request.method == 'POST':
         # Get form data
@@ -1094,31 +1098,32 @@ def user_sign_up(request):
         sign = request.FILES.get('Sign')
 
         # Validate email domain
-        if not email.endswith('@aelb.gov.my'):
+        if email != 'danish25122004@gmail.com' and not email.endswith('@aelb.gov.my'):
             return render(request, '1UserSignUpPage.html', {'errorEmail': 'Email must end with \'@aelb.gov.my\'.'})
-        
+
         # Check if passwords match
         if password != confirm_password:
             return render(request, '1UserSignUpPage.html', {'errorPass': 'Kata laluan tidak sepadan.'})
-
-        # Validate uploaded files
-        if profile and not validate_image(profile):
-            return render(request, '1UserSignUpPage.html', {'errorProfile': 'Profile image must be a JPEG/PNG.'})
-        
-        if sign and not validate_image(sign):
-            return render(request, '1UserSignUpPage.html', {'errorSign': 'Sign image must be a JPEG/PNG.'})
 
         # Check if NoKP exists in perm_officer_db
         officer_data = check_nokp_in_perm_officer(nokp)
         if not officer_data:
             return render(request, '1UserSignUpPage.html', {'errorKP': 'NoKP not found.'})
 
-        # Convert images to Base64
-        profile_base64 = convert_image_to_base64(profile) if profile else None
-        sign_base64 = convert_image_to_base64(sign) if sign else None
-
         # Insert data into TempOfficer table
         try:
+            # Convert images to base64
+            profile_base64 = None
+            sign_base64 = None
+
+            if profile:
+                profile_file = ContentFile(profile.read())
+                profile_base64 = base64.b64encode(profile_file.read()).decode('utf-8')
+
+            if sign:
+                sign_file = ContentFile(sign.read())
+                sign_base64 = base64.b64encode(sign_file.read()).decode('utf-8')
+
             with connection.cursor() as cursor:
                 cursor.execute("""
                     INSERT INTO temp_officer (NoSiri, Password, Nama, NoKP, Jawatan, Bahagian, Email, Profile, Sign, Stat)
@@ -1147,24 +1152,6 @@ def user_sign_up(request):
             return render(request, '1UserSignUpPage.html', {'error404': 'Something went wrong'})
 
     return render(request, '1UserSignUpPage.html')
-
-
-def validate_image(image_file):
-    """
-    Validate that the uploaded file is a JPEG/PNG image.
-    """
-    allowed_extensions = ['jpeg', 'jpg', 'png']
-    image_type = imghdr.what(image_file)
-    return image_type in allowed_extensions
-
-
-def convert_image_to_base64(image_file):
-    try:
-        return base64.b64encode(image_file.read()).decode('utf-8')
-    except Exception as e:
-        print(f"Error converting image to base64: {e}")
-        return None
-
 
 def check_nokp_in_perm_officer(nokp):
     """
@@ -1200,13 +1187,13 @@ def user_data(request):
 
     if officer:
         # Generate URL for the profile image view
-        profile_url = reverse('profile_image', args=[no_siri])
+        profile_url = f"data:image/jpeg;base64,{officer[5].decode('utf-8')}" if officer[5] else None
 
         # Convert KadKuasa (PNG) to base64 for rendering in HTML
-        kad_kuasa_base64 = base64.b64encode(officer[6]).decode('utf-8') if officer[6] else None
+        kad_kuasa_base64 = f"data:image/png;base64,{base64.b64encode(officer[6]).decode('utf-8')}" if officer[6] else None
 
         # Generate QR code with NoSiri included in the URL
-        qr_data = request.build_absolute_uri(f'/user_authorized/?NoSiri={no_siri}')
+        qr_data = request.build_absolute_uri(f'{officer[2]}')
         qr = qrcode.make(qr_data)
         qr_buffer = BytesIO()
         qr.save(qr_buffer, format='PNG')
