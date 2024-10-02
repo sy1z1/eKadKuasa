@@ -5,8 +5,7 @@ from . import views
 from .views import OfficerListView
 
 urlpatterns = [
-    path("", views.h, name="h"),
-    path("login/", views.login, name="login"),
+    path("", views.login, name="login"),
     path("data/", views.data, name="data"),
     path("report/", views.report, name="report"),
     path('personal/<str:no_siri>/', views.personal, name='personal'),

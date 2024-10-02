@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Report Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATOM Malaysia - Report KadKuasa</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -105,7 +108,7 @@
             <div class="display-2">
                 <ul>
                 {% for officer in unique_officers %}
-                    {% if not officer.2 %} <!-- Status check (False or 0) -->
+                    {% if not officer.2 %}
                         <li>
                             <a href="{% url 'personal' officer.0 %}" style="color: rgb(188, 26, 26); font-weight: bold;">
                                 {{ officer.1 }}

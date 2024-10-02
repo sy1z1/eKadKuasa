@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Data Management</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInput');
@@ -73,8 +74,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: blue ;
-            
             z-index: 100;
         }
         input[type="text"] {
@@ -108,11 +107,15 @@
             transition: 300ms ease-in-out;
         }
 
+        .search-add-container .url {
+            padding-left: 14%;
+            display: flex;
+            align-items: center;
+        }
+
         .search-add-container a{
             color: #c9c8c8;
             text-decoration: none;
-            position: relative;
-            left: 180px;
         }
         .search-add-container a:hover{
             color: #7b1318;
@@ -225,6 +228,11 @@ td, th {
     vertical-align: middle;
 }
 
+td a{
+    color: #7b1318;
+    font-weight: bold;
+}
+
 .search-add-container a {
             color: grey;
             text-decoration: none;
@@ -274,15 +282,15 @@ td, th {
             <input type="text" id="searchInput" placeholder="Search...">
             <select id="filterSelect">
                 <option value="Nama">Filter by Nama</option>
-                <option value="Bahagian">Filter by Bahagian</option>
                 <option value="Jawatan">Filter by Jawatan</option>
                 <option value="Status">Filter by Status</option>
-            </select>            
-            <a href="{% url 'approve' %}" class="{% if has_pending %}need-approval{% endif %}">
-                {% if has_pending %}Need Approval{% else %}No Approval{% endif %}
-            </a>
-
-            <a href="{% url 'download_officer_pdf' %}" class="btn"><img src="{% static 'dwGrey.png' %}" class="download-icon"></a>
+            </select>    
+            <div class="url">     
+                <a href="{% url 'approve' %}" class="{% if has_pending %}need-approval{% endif %}">
+                    {% if has_pending %}Need Approval{% else %}No Approval{% endif %}
+                </a>
+                <a href="{% url 'download_officer_pdf' %}" class="btn"><img src="{% static 'dwGrey.png' %}" class="download-icon"></a>
+            </div>
         </div>
 
         {% if officers %}
@@ -310,8 +318,8 @@ td, th {
                         </td>
                         <td>{{ officer.Nama }}</td>
                         <td>
-                            <a href="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.NoSiri }}.html" style="z-index: 10;" target="_blank">
-                                {{ officer.NoSiri }}
+                            <a href="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.Bahagian }}.html" style="z-index: 10;" target="_blank">
+                                {{ officer.Bahagian }}
                             </a>
                         </td>
                         <td>{{ officer.Jawatan }}</td>

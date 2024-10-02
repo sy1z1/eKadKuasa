@@ -189,15 +189,14 @@ def check_token(token):
 
 def data(request, filter_by='Nama', query=''):
     with connection.cursor() as cursor:
-        # SQL query with filtering (adjusted for your `filter_by` field)
         query_sql = f"""
             SELECT NoSiri, Nama, Bahagian, Jawatan, Status, Profile
             FROM officer
             WHERE {filter_by} LIKE %s
         """
-        # Execute the query with parameterized input to avoid SQL injection
+        
         cursor.execute(query_sql, [f'%{query}%'])
-        officers_raw = cursor.fetchall()  # Fetch all officers' data
+        officers_raw = cursor.fetchall()  
 
     # Process the raw data into dictionaries for template use
     officers = []
@@ -218,9 +217,18 @@ def data(request, filter_by='Nama', query=''):
         
         officers.append(officer)
 
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT Stat
+            FROM temp_officer
+            WHERE Stat = 'Pending'
+        """)
+        has_pending = cursor.fetchall()
+
     # Pass the processed data to the template
     context = {
-        'officers': officers
+        'officers': officers,
+        'has_pending': has_pending
     }
     return render(request, '2dataPage.html', context)
 
@@ -314,8 +322,8 @@ def personal(request, no_siri):
         counts[day - 1] = count
 
     context = {
-        'dates': dates,  # Static list of all days in the month
-        'counts': counts,  # The counts mapped to the days
+        'dates': dates,  
+        'counts': counts, 
         'NoSiri': officer_data[0],
         'Nama': officer_data[1],
         'NoKP': officer_data[2],
@@ -324,7 +332,7 @@ def personal(request, no_siri):
         'Email': officer_data[5],
         'Status': officer_data[6],
         'Profile': f"data:image/jpeg;base64,{officer_data[7].decode('utf-8')}",
-        'month_name': today.strftime('%B')  # Current month
+        'month_name': today.strftime('%B') 
     }
 
     return render(request, "4reportPersonalPage.html", context)
@@ -588,6 +596,12 @@ def update(request, no_siri):
         kad_kuasa_data = None
         if kad_kuasa:
             kad_kuasa_data = kad_kuasa.read()
+        else:
+            # Fetch the existing image if no new image is uploaded
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""SELECT KadKuasa FROM officer WHERE NoSiri = %s""", [no_siri])
+                result = cursor.fetchone()
+                kad_kuasa_data = result[0] if result else None
 
         # Update the officer data
         with connections['default'].cursor() as cursor:
@@ -1179,7 +1193,7 @@ def user_data(request):
 
     with connections['default'].cursor() as cursor:
         cursor.execute("""
-            SELECT NoSiri, Nama, Bahagian, Jawatan, Status, Profile, KadKuasa
+            SELECT NoSiri, Nama, NoKP, Jawatan, Bahagian, Email, Profile, KadKuasa, Status
             FROM officer
             WHERE NoSiri = %s
         """, [no_siri])
@@ -1187,13 +1201,13 @@ def user_data(request):
 
     if officer:
         # Generate URL for the profile image view
-        profile_url = f"data:image/jpeg;base64,{officer[5].decode('utf-8')}" if officer[5] else None
+        profile_url = f"data:image/jpeg;base64,{officer[6].decode('utf-8')}" if officer[6] else None
 
         # Convert KadKuasa (PNG) to base64 for rendering in HTML
-        kad_kuasa_base64 = f"data:image/png;base64,{base64.b64encode(officer[6]).decode('utf-8')}" if officer[6] else None
+        kad_kuasa_base64 = f"data:image/png;base64,{base64.b64encode(officer[7]).decode('utf-8')}" if officer[7] else None
 
         # Generate QR code with NoSiri included in the URL
-        qr_data = request.build_absolute_uri(f'{officer[2]}')
+        qr_data = request.build_absolute_uri(f'{officer[4]}')
         qr = qrcode.make(qr_data)
         qr_buffer = BytesIO()
         qr.save(qr_buffer, format='PNG')
@@ -1203,12 +1217,14 @@ def user_data(request):
             'officer': {
                 'NoSiri': officer[0],
                 'Nama': officer[1],
-                'Bahagian': officer[2],
+                'NoKP': officer[2],
                 'Jawatan': officer[3],
-                'Status': officer[4],
-                'ProfileURL': profile_url,  # Use the URL for Profile image
-                'KadKuasa': kad_kuasa_base64,  # Use base64 encoded string for Kad Kuasa (PNG)
-                'QRCode': qr_base64  # Use base64 encoded string for QR code
+                'Bahagian': officer[4],
+                'Email': officer[5],
+                'ProfileURL': profile_url,
+                'KadKuasa': kad_kuasa_base64,
+                'QRCode': qr_base64,
+                'Status': officer[8]
             }
         }
     else:

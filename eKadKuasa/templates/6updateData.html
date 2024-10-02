@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Officer Data</title>
+    <title>ATOM Malaysia - Update KadKuasa</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
     <style>
         body{
             font-family: Arial, Helvetica, sans-serif;
@@ -141,7 +142,7 @@
                     <label for="nama">Nama:</label>
                     <input type="text" name="nama" value="{{ officer.Nama }}">
                     <label for="bahagian">Link:</label>
-                    <input type="text" name="link" value="https://www.aelb.gov.my/v2/kadkuasa/{{ officer.Bahagian }}.html">
+                    <input type="text" name="link" value="{{ officer.Bahagian }}">
                     <label for="jawatan">Jawatan:</label>
                     <input type="text" name="jawatan" value="{{ officer.Jawatan }}">
                     <label for="status">Status:</label>

@@ -2,124 +2,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATOM Malaysia - KadKuasa</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
     <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #b70707; /* Fallback background color */
-            color: white;
-            overflow-x: hidden;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #b70707;
+    color: white;
+    overflow-x: hidden;
+    background-image: url("{% static 'redBG.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
 
-            /* Background image settings */
-            background-image: url("{% static 'redBG.jpg' %}"); /* Add your image path */
-            background-size: cover; /* Makes sure the image covers the entire background */
-            background-position: center; /* Centers the background image */
-            background-repeat: no-repeat; /* Prevents the image from repeating */
-            background-attachment: fixed; /* Fixes the image so it doesn’t scroll with content */
-        }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: right;
-            width: 90%;
-            margin: 30px;
-            padding-left: 100px;
-            border: blue 1px solid;
-        }
-        .profile-img {
-            width: 50px;               
-            height: 50px;              
-            border-radius: 50%;        
-            margin-right: 10px;
-            object-fit: cover;         
-            overflow: hidden;
-        }
-        .welcome-text {
-            font-size: 18px;
-            font-weight: bold;
-            padding-right: 30px;
-        }
-        .card {
-            background-color: rgb(179, 28, 28);
-            border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-            width: 100%;
-            max-width: 400px;
-            height: 245px;
-            transition: transform 0.3s ease-in-out;
-            color: black;
-        }
-        .card:hover {
-            cursor: pointer;
-            transform: scale(1.05);
-        }
-        .bottom-card {
-            margin-top: 30px;
-        }
-        .qr-code {
-            margin-top: 20px;
-            width: 150px;
-            height: 150px;
-        }
-        .qr-code2 {
-            margin-top: 20px;
-            width: 95px;
-            height: 95px;
-            position: relative;
-            bottom: 16.5vh;
-            left: 40.5vh;
-            border-radius: 20px;
-        }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 18px;
-            padding: 5px 10px;
-            background-color: #eee;
-            color: #b70707;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .card-container {
-            width: 103%;
-            margin-top: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Centers the card horizontally */
-            justify-content: center; /* Centers the card vertically */
-            background-color: white;
-            border-radius: 20% 20% 0 0;
-            padding-bottom: 20%;
-        }
-        .logo {
-            position: absolute;
-            right: 85%;
-            width: 150px;
-            border-radius: 20px;
-        }
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        #view2 {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+}
+
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 90%;
+    margin: 3vh 0;
+}
+
+
+.profile-img {
+    width: 40px;              
+    height: 40px;              
+    border-radius: 50%;        
+    margin-right: 10px;
+    object-fit: cover;        
+    overflow: hidden;
+}
+
+
+.welcome-text {
+    font-size: 1em;
+    font-weight: bold;
+    padding-right: 3vh;
+}
+
+
+.card {
+    background-color: rgb(179, 28, 28);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    width: 90%;
+    max-width: 400px;
+    height: 245px;
+    transition: transform 0.3s ease-in-out;
+    color: black;
+}
+
+
+.card:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+
+.bottom-card {
+    margin-top: 30px;
+}
+
+
+.qr-code {
+    margin-top: 20px;
+    width: 150px;
+    height: 150px;
+}
+
+
+.qr-code2 {
+    margin-top: 20px;
+    width: 95px;
+    height: 95px;
+    position: relative;
+    bottom: 14vh;
+    left: 35vh;
+    border-radius: 20px;
+}
+
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 18px;
+    padding: 5px 10px;
+    background-color: #eee;
+    color: #b70707;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.card-container {
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 10% 10% 0 0;
+    padding-bottom: 20%;
+}
+
+
+.logo {
+    position: relative;
+    right: 0;
+    width: 100px;
+    border-radius: 20px;
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+#view2 {
+    display: none;
+    animation: fadeIn 0.5s;
+}
+
+
+/* Media queries for mobile view */
+@media only screen and (max-width: 768px) {
+    .profile-img {
+        width: 30px;
+        height: 30px;
+    }
+
+
+    .card {
+        width: 90%;
+        height: 20vh;
+        margin-top: 70px;
+    }
+
+
+    .qr-code {
+        width: 300px;
+        height: 300px;
+    }
+
+
+    .qr-code2 {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        bottom: 13vh;
+        left: 31vh;
+    }
+
+
+    .card-container {
+        width: 100%;
+        padding: 20px;
+        height: auto;
+    }
+
+    .info-container {
+        margin-top: 30px;
+    }
+
+    .logo {
+        width: 100px;
+        right: 0;
+    }
+
+
+    .header {
+        justify-content: center;
+        width: 100%;
+    }
+}
     </style>
 </head>
 <body>
@@ -128,9 +207,8 @@
         <div class="header">
             <img src="{% static 'images.png' %}" alt="logo" class="logo">
             <div class="welcome-text">{{ officer.Nama }} #{{ officer.NoSiri }}</div>
-            <img src="{{ officer.ProfileURL }}" alt="Profile" class="profile-img">
         </div>
-        <h1>Welcome {{ officer.Nama }} to your eKadKuasa</h1>
+        <h1>Welcome {{ officer.Nama }}</h1>
         <div class="card-container">
             <div class="card" onclick="showView2()">
                 <img src="{{ officer.KadKuasa }}" alt="KadKuasa" style="width:100%">
@@ -148,7 +226,24 @@
         <div class="card">
             <img src="{{ officer.KadKuasa }}" alt="KadKuasa" style="width:100%">
         </div>
-        <img src="data:image/png;base64,{{ officer.QRCode }}" alt="QR Code" class="qr-code">
+        <div class="info-container">
+            <h1>Maklumat Diri</h1>
+            <img src="data:image/png;base64,{{ officer.QRCode }}" alt="QR Code" class="qr-code">
+            <div class="text-info">
+                <p>#{{ officer.NoSiri }}</p>
+                <p>Nama: {{ officer.Nama }}</p>
+                <p>No. KP: {{ officer.NoKP }}</p>
+                <p>Jawatan: {{ officer.Jawatan }}</p>
+                <p>Email: {{ officer.Email }}</p>
+                <p>Status: 
+                    {% if officer.Status == 1 %}
+                        Active
+                    {% else %}
+                        Resigned
+                    {% endif %}
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
