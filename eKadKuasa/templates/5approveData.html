@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Approval KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
 
         body {
             font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
         }
 
         header {
@@ -89,6 +90,46 @@
             color: #555;
         }
 
+        .bubble2 {
+            width: 95%;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20vh;
+        }
+
+        .bubble2 img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .bubble2 .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bubble2 .name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bubble2 .nosiri {
+            color: #555;
+        }
+        .remove a{
+            text-decoration: none;
+            color: #741900;
+            position: relative;
+            left: 60vw;
+        }
+
     </style>
 </head>
 <body>
@@ -101,6 +142,7 @@
     </header>
     <hr>
     <div class="container">
+        <h2>Pending</h2>
         {% for officer in pending_officers %}
         <div class="bubble" onclick="window.location.href=`{% url 'extend_approve' officer.NoSiri %}`">
             {% if officer.Profile %}
@@ -111,6 +153,35 @@
             <div class="details">
                 <div class="name">{{ officer.Nama }}</div>
                 <div class="nosiri">{{ officer.NoSiri }}</div>
+            </div>
+            <div class="message">
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <br>
+        <hr style="border: 0; height: 1.5px; width: 95vw; position: relative; left: -5px; background-color: #e3e3e3; margin: 20px 0;">
+        <h2>Rejected</h2>
+        {% for officer in rejected_officers %}
+        <div class="bubble2">
+            {% if officer.Profile %}
+                <img src="{{ officer.Profile }}" alt="Profile Image">
+            {% else %}
+                <img src="{% static 'appLogo.png' %}" alt="Default Profile Image">
+            {% endif %}
+            <div class="details">
+                <div class="name">{{ officer.Nama }}</div>
+                <div class="nosiri">{{ officer.NoSiri }}</div>
+            </div>
+            <div class="message">
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+            </div>
+            <div class="remove">
+                <a href="{% url 'delete_officer' officer.NoSiri %}">Remove</a>
             </div>
         </div>
         {% endfor %}

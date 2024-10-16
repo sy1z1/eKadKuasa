@@ -88,9 +88,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ekadkuasa',
         'USER': 'root',
-        'PASSWORD': 'ekadkuasa2023!',
+        'PASSWORD': 'c01299e509',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '3308',
     }
 }
 
@@ -142,10 +142,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'syazwi25122004@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'kfigxbmyovusuziq'  # Your generated app password
+EMAIL_HOST_USER = 'urusetiakadkuasa@aelb.gov.my'  
+EMAIL_HOST_PASSWORD = 'vkxvatdtruylelft'  # generated app password
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+APPEND_SLASH = True

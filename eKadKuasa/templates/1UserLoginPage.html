@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Log Masuk KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body {
             display: flex;
@@ -99,6 +99,21 @@
         .forgot-link {
             margin-left: 170px;
         }
+        .hide1 button{
+            width: min-content;
+            height: 30px;
+            padding: 0;
+            margin-top: 2px;
+            border-radius: 20px;
+            position: relative;
+            top: -6vh;
+            left: 20vh;
+            background-color: #f68a825e;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .hide1 img{
+            width: 30px;
+        }
 
         /* Responsive design for mobile */
         @media (max-width: 768px) {
@@ -129,7 +144,12 @@
         <form method="POST" action="{% url 'officer_login' %}">
             {% csrf_token %}
             <input type="text" name="NoSiri" placeholder="No. Siri" required>
-            <input type="password" name="password" placeholder="Kata Laluan" required>
+            <input type="password" id="password" name="password" placeholder="Kata Laluan" required>
+            <div class="hide1">
+                <button type="button" onclick="togglePassword('password', this)">
+                    <img src="{% static 'passUnhide.png' %}" id="toggle-image">
+                </button>
+            </div>
             <button type="submit">Masuk</button>
             <a class="register-link" href="{% url 'user_sign_up' %}">Daftar Baru </a>
             <a class="forgot-link" href="{% url 'forgot' %}" >Lupa Kata Laluan</a>
@@ -139,6 +159,19 @@
         {% endif %}
     </div>
     <div class="background"></div>
+    <script>
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+
+            const img = button.querySelector('img');
+            if (input.type === 'text') {
+                img.src = "{% static 'passHide.png' %}";
+            } else {
+                img.src = "{% static 'passUnhide.png' %}";
+            }
+        }
+    </script>
 </body>
 </html>
 {% endblock %}

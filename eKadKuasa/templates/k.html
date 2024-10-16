@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATOM Malaysia - error404</title>
+    <title>Page Not Found</title>
     <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body{
@@ -57,9 +57,9 @@
         <h1>OOPS...</h1>
         <img src="{% static 'err404.png' %}" alt="err-404">
         <h2>ERROR 404</h2>
-        <h4>Something went wrong</h4>
+        <h4>Page Not Found</h4>
         <p>Try navigate back to the login page by clicking button below. If you keep seeing this page contact the Urus Setia Kad Kuasa using urusetiakadkuasa@aelb.gov.my</p>
-        <a href="{% url 'login' %}">Back</a>
+        <a href="{% url 'officer_login' %}">Back</a>
     </div>
 </body>
 </html>

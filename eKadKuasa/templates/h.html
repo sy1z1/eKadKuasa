@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code</title>
+    <title>ATOM Malaysia - err-404</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body{
             font-family: Arial, Helvetica, sans-serif;
@@ -13,13 +15,51 @@
             align-items: center;
             text-align: center;
             margin-top: 10%;
+            background-color: #a31e22;
+            color: white;
+        }
+        .h{
+            position: absolute;
+            top: 1vh;
+            width: 40%;
+        }
+        h1 {
+            font-size: 4em;
+            font-weight: bold;
+        }
+        img {
+            width: 60%;
+            height: 38vh;
+            object-fit: cover;
+            position: relative;
+        }
+        p {
+            color: #ffffff8c;
+            padding: 0px 30px 0px 30px;
+        }
+        a {
+            background-color: white;
+            padding: 10px 80px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #a31e22;
+            margin-top: 30px;
+        }
+        @media only screen and (max-width: 768px) {
+            .h{
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="h">
-        <h1>Scan the QR code below to login</h1>
-        <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+        <h1>OOPS...</h1>
+        <img src="{% static 'err404.png' %}" alt="err-404">
+        <h2>ERROR 404</h2>
+        <h4>Something went wrong</h4>
+        <p>Try navigate back to the login page by clicking button below. If you keep seeing this page contact the Urus Setia Kad Kuasa using urusetiakadkuasa@aelb.gov.my</p>
+        <a href="{% url 'officer_login' %}">Back</a>
     </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Update KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body{
             font-family: Arial, Helvetica, sans-serif;
@@ -120,7 +120,7 @@
             <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo">
             <nav>
                 <a href="{% url 'data' %}" class="active" style="color: brown;">Data Management</a>
-                <a href="#">Reports</a>
+                <a href="{% url 'report' %}">Reports</a>
             </nav>
         </header>
         <hr>
@@ -153,7 +153,9 @@
                     <label for="profile_img">Profile Image:</label>
                     <input type="file" name="profile_img" accept=".jpg,.jpeg,">
                     <label for="kad_kuasa">Kad Kuasa (PNG):</label>
-                    <input type="file" name="kad_kuasa" accept=".png">
+                    <input type="file" name="kad_kuasa" accept=".png" value="{{ officer.KadKuasa }}">
+                    <label for="kad_kuasa_belakang">Kad Kuasa Belakang (PNG):</label>
+                    <input type="file" name="kad_kuasa_belakang" accept=".png" value="{{ officer.KadKuasaBelakang }}">
                     <button type="submit" class="btn">Update</button>
                 </form>
             </div>

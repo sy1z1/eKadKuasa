@@ -5,20 +5,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #b70707;
-    color: white;
-    overflow-x: hidden;
-    background-image: url("{% static 'redBG.jpg' %}");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #b70707;
+            color: white;
+            overflow-x: hidden;
+            background-image: url("{% static 'redBG.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .loading-screen {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: #b70707; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999; 
+            color: white; 
+        } 
+        
+        .spinner { 
+            border: 3px solid #b70707; 
+            border-top: 3px solid #ffffff; 
+            border-radius: 50%; 
+            width: 60px; 
+            height: 60px; 
+            animation: spin 1s linear infinite;
+            position: relative;
+         } 
+
+         .logo-in-spinner { 
+            position: absolute;
+            top: 47%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            border-radius: 30px;
+            width: 50px; 
+            height: 50px; 
+        }
+
+         @keyframes spin { 
+            0% { 
+                transform: rotate(0deg);
+             } 
+             100% { 
+                transform: rotate(360deg); 
+            } 
+        }
+        .loading-text { 
+            margin-top: 20px; 
+            font-size: 18px; 
+            text-align: center; 
+            color: white; 
+        }
 
 
 .container {
@@ -29,13 +79,26 @@
     padding: 10px;
 }
 
+.container2 {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+}
+
 
 .header {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    width: 90%;
+    justify-content: center;
+    width: 100%;
     margin: 3vh 0;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    top: -3vh;
+    margin-bottom: 10vh;
 }
 
 
@@ -76,7 +139,15 @@
 
 
 .bottom-card {
+    background-color: rgb(179, 28, 28);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 30px;
+    width: 90%;
+    max-width: 400px;
+    height: 245px;
+    transition: transform 0.3s ease-in-out;
+    color: black;
 }
 
 
@@ -112,25 +183,39 @@
 
 
 .card-container {
-    width: 100%;
+    width: 99%;
     margin-top: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: white;
-    border-radius: 10% 10% 0 0;
+    border-radius: 30px 30px 0 0;
     padding-bottom: 20%;
 }
 
 
 .logo {
     position: relative;
-    right: 0;
     width: 100px;
-    border-radius: 20px;
 }
 
+.logout-button { 
+    background-color: #eee; 
+    color: #b70707; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    font-size: 18px; 
+    cursor: pointer; 
+    margin-top: 20px; 
+    width: 150px; 
+    text-align: center; 
+} 
+
+.logout-button:hover { 
+    background-color: #ddd; 
+}
 
 @keyframes fadeIn {
     0% {
@@ -147,6 +232,28 @@
     animation: fadeIn 0.5s;
 }
 
+.head-text {
+    position: relative;
+    top: 5vh;
+}
+.head-text p{
+    position: relative;
+    top: 2vh;
+}
+
+.info-container {
+    margin-top: 2vh;
+    padding-bottom: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    color: black;
+    border-radius: 30px 30px 0 0;
+}
 
 /* Media queries for mobile view */
 @media only screen and (max-width: 768px) {
@@ -179,13 +286,13 @@
 
 
     .card-container {
-        width: 100%;
+        width: 99%;
         padding: 20px;
         height: auto;
     }
 
     .info-container {
-        margin-top: 30px;
+        margin-top: 10vh;
     }
 
     .logo {
@@ -198,30 +305,48 @@
         justify-content: center;
         width: 100%;
     }
+    form {
+        margin-top: 5vh;
+    }
 }
     </style>
 </head>
 <body>
+    <div class="loading-screen"> 
+        <div class="spinner"></div> 
+        <img src="{% static 'webLogo.png' %}" alt="Logo" class="logo-in-spinner"> 
+        <div class="loading-text" id="loadingText">
+            Your Kad Kuasa will be ready
+        </div> 
+    </div>
+
+    {% if officer.Status %}
     <!-- View 1 -->
-    <div id="view1" class="container">
+    <div id="view1" class="container" >
         <div class="header">
             <img src="{% static 'images.png' %}" alt="logo" class="logo">
-            <div class="welcome-text">{{ officer.Nama }} #{{ officer.NoSiri }}</div>
         </div>
-        <h1>Welcome {{ officer.Nama }}</h1>
+        <div class="head-text">
+            <p>Welcome</p>
+            <h1>{{ officer.Nama }}</h1>
+        </div>
         <div class="card-container">
             <div class="card" onclick="showView2()">
                 <img src="{{ officer.KadKuasa }}" alt="KadKuasa" style="width:100%">
                 <img src="data:image/png;base64,{{ officer.QRCode }}" alt="QR Code" class="qr-code2">
             </div>
-            <div class="card bottom-card">
-                <img src="{% static 'kadKuasaBelakang.png' %}" alt="Local Kad" style="width:100%">
+            <div class="bottom-card">
+                <img src="{{ officer.KadKuasaBelakang }}" alt="KadKuasaBelakang" style="width:100%">
             </div>
+            <form action="{% url 'officer_logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Log Out</button>
+            </form>
         </div>
     </div>
 
     <!-- View 2 (Hidden Initially) -->
-    <div id="view2" class="container">
+    <div id="view2" class="container2" style="display: none;">
         <div class="back-button" onclick="showView1()">← Back</div>
         <div class="card">
             <img src="{{ officer.KadKuasa }}" alt="KadKuasa" style="width:100%">
@@ -245,8 +370,34 @@
             </div>
         </div>
     </div>
+    {% else %}
+    Your Kad Kuasa has been terminated
+    {% endif %}
 
     <script>
+        const loadingTexts = [ 
+            "Your Kad Kuasa will be ready", 
+            "Don't share your information in this app ", 
+            "Almost There",
+             "Configuring the UI", 
+             "Welcome!" 
+            ]; 
+            let currentTextIndex = 0;
+            const loadingTextElement = document.getElementById('loadingText'); 
+            function rotateLoadingText() { 
+                loadingTextElement.textContent = loadingTexts[currentTextIndex]; 
+                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length; 
+            }  
+            setInterval(rotateLoadingText, 2000); 
+            window.onload = function() { 
+                setTimeout(() => { 
+                    document.querySelector('.loading-screen').style.display = 'none'; 
+                    document.querySelectorAll('.container').forEach(function(container) { 
+                        container.style.display = 'flex'; 
+                    }); 
+                }, 1000); 
+            };
+
         function showView2() {
             document.getElementById('view1').style.display = 'none';
             document.getElementById('view2').style.display = 'flex';

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Approval KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webpLogo.png' %}">
     <style>
         body, html {
             font-family: Arial, Helvetica, sans-serif;
@@ -136,8 +136,8 @@
     <header>
         <img src="{% static 'images.png' %}" alt="ATOM Malaysia Logo" class="logo">
         <nav>
-            <a href="#" class="active" style="color: brown;">Data Management</a>
-            <a href="#">Reports</a>
+            <a href="{% url 'data' %}" class="active" style="color: brown;">Data Management</a>
+            <a href="{% url 'report' %}">Reports</a>
         </nav>
     </header>
     <hr>
@@ -169,11 +169,17 @@
                 <button type="button" id="decline-btn">Decline</button>
 
                 <!-- Hidden section for Kad Kuasa and Submit button -->
-                <div id="kadkuasa-section" style="display: none;" class="kadkuasa-section">
-                    <label for="kadkuasa">Upload Kad Kuasa (PNG):</label>
-                    <input type="file" name="kadkuasa" id="kadkuasa" accept=".png">
-                    <button type="submit" formaction="{% url 'approve_action' NoSiri %}">Submit</button>
-                </div>
+                 {% if message %}
+                    <h4>{{ message }}</h4>
+                 {% else %}
+                    <div id="kadkuasa-section" style="display: none;" class="kadkuasa-section">
+                        <label for="kadkuasa">Upload Kad Kuasa Depan(PNG):</label>
+                        <input type="file" name="kadkuasa" id="kadkuasa" accept=".png">
+                        <label for="kadkuasa">Upload Kad Kuasa Belakang(PNG):</label>
+                        <input type="file" name="kadkuasaBelakang" id="kadkuasa" accept=".png">
+                        <button type="submit" formaction="{% url 'approve_action' NoSiri %}">Submit</button>
+                    </div>
+                {% endif %}
 
                 <!-- Hidden section for Decline Reason and Submit button for Decline -->
                 <div id="decline-section" style="display: none;" class="decline-section">

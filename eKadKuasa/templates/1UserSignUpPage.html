@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Daftar KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body {
             display: flex;
@@ -23,7 +23,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* This will keep the background fixed */
+    background-attachment: fixed;
     position: absolute;
     top: 0;
     left: 0;
@@ -239,8 +239,8 @@
                 </div>
         
                 <div class="input-group">
-                    <input type="password" name="password" id="password" placeholder=" " required maxlength="8" minlength="8">
-                    <label>Kata Laluan</label>
+                    <input type="password" name="password" id="password" placeholder=" " required oninput="checkPasswordMatch()">
+                    <label>Kata Laluan (8 character sahaja)</label>
                     {% if errorPass %}
                         <span id="email-error" style="color:red;">{{ errorPass }}</span>
                     {% endif %}
@@ -252,7 +252,7 @@
                 </div>
                 
                 <div class="input-group">
-                    <input type="password" name="confirm_password" id="confirm_password" placeholder=" " required maxlength="8" minlength="8" oninput="checkPasswordMatch()">
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder=" " required oninput="checkPasswordMatch()">
                     <label>Sahkan Kata Laluan</label>
                     <div class="hide1">
                         <button type="button" onclick="togglePassword('confirm_password', this)">
@@ -263,7 +263,7 @@
                 </div>
         
                 <div class="input-group">
-                    <input type="text" name="NoKP" placeholder=" " required>
+                    <input type="number" name="NoKP" placeholder=" " required>
                     <label>No Kad Pengenalan</label>
                     {% if errorKP %}
                         <span id="email-error" style="color:red;">{{ errorKP }}</span>
@@ -271,16 +271,16 @@
                 </div>
         
                 <div class="input-group">
-                    <input type="file" name="Profile" accept=".jpg,.jpeg,.png" required>
-                    <label for="Profile">Profile Picture (JPG or PNG)</label>
+                    <input type="file" name="Profile" accept=".jpg,.jpeg" required>
+                    <label for="Profile">Profile Picture (JPG)</label>
                     {% if errorProfile %}
                         <span id="email-error" style="color:red;">{{ errorProfile }}</span>
                     {% endif %}
                 </div>
         
                 <div class="input-group">
-                    <input type="file" name="Sign" accept=".jpg,.jpeg,.png" required>
-                    <label for="Sign">Sign (JPG or PNG)</label>
+                    <input type="file" name="Sign" accept=".jpg,.jpeg" required>
+                    <label for="Sign">Sign (JPG)</label>
                     {% if errorSign %}
                         <span id="email-error" style="color:red;">{{ errorSign }}</span>
                     {% endif %}
@@ -311,8 +311,13 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
             const errorMsg = document.getElementById('password-error');
-            
-            if (confirmPassword && password !== confirmPassword) {
+
+
+            if (password.length !== 8) {
+                errorMsg.textContent = 'Kata laluan mesti tepat 8 aksara.';
+                errorMsg.style.display = 'block';
+            } else if (confirmPassword && password !== confirmPassword) {
+                errorMsg.textContent = 'Kata laluan tidak sepadan.';
                 errorMsg.style.display = 'block';
             } else {
                 errorMsg.style.display = 'none';

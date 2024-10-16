@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATOM Malaysia - Reset Kata Laluan KadKuasa</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'appLogo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'webLogo.png' %}">
     <style>
         body {
             background-color: rgba(255, 251, 251, 0.851);
@@ -79,9 +80,28 @@
         li {
             margin-bottom: 10px;
         }
+        .hide1 button{
+            width: min-content;
+            height: 30px;
+            padding: 0;
+            border-radius: 20px;
+            position: relative;
+            top: -6vh;
+            left: 40vh;
+            background-color: #f68a825e;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .hide1 img{
+            width: 30px;
+        }
         .alert {
             text-align: center;
             color: red;
+        }
+        #password-error {
+            position: relative;
+            bottom: 5vh;
+            text-align: center;
         }
     </style>
 </head>
@@ -92,8 +112,14 @@
         <div class="textBox">
             <form method="post">
                 {% csrf_token %}
-                <input type="password" name="new_password" placeholder="Kata Laluan Baru" required>
-                <input type="password" name="confirm_password" placeholder="Sahkan Kata Laluan" required>
+                <input type="password" id="password" name="new_password" placeholder="Kata Laluan Baru (8 character sahaja)" required minlength="8">
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Sahkan Kata Laluan" oninput="checkPasswordMatch()" required minlength="8">
+                <div class="hide1">
+                    <button type="button" onclick="togglePassword('password', this)">
+                        <img src="{% static 'passUnhide.png' %}" id="toggle-image">
+                    </button>
+                </div>
+                <span id="password-error" style="color:red; display:none;">Kata laluan tidak sepadan.</span>
                 <button type="submit">Tetapkan Kata Laluan</button>
             </form>
             {% if message %}
@@ -102,6 +128,48 @@
         </div>
     </div>
     <div class="background"></div>
-</body>
+    <script>
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
 
+            const img = button.querySelector('img');
+            if (input.type === 'text'){
+                img.src = "{% static 'passHide.png' %}";
+            } else {
+                img.src = "{%static 'passUnhide.png' %}";
+            }
+        }
+
+
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        const errorMsg = document.getElementById('password-error');
+
+
+        if (password.length !== 8) {
+            errorMsg.textContent = 'Kata laluan mesti tepat 8 aksara.';
+            errorMsg.style.display = 'block';
+        } else if (confirmPassword && password !== confirmPassword) {
+            errorMsg.textContent = 'Kata laluan tidak sepadan.';
+            errorMsg.style.display = 'block';
+        } else {
+            errorMsg.style.display = 'none';
+        }
+    }
+
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const password = document.getElementById('password').value;
+
+
+        if (password.length !== 8) {
+            event.preventDefault(); // Prevent form submission if password is not exactly 8 characters
+            document.getElementById('password-error').textContent = 'Kata laluan mesti tepat 8 aksara.';
+            document.getElementById('password-error').style.display = 'block';
+        }
+    });
+    </script>
+</body>
 </html>
