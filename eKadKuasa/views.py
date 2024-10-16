@@ -1350,6 +1350,61 @@ class RecordView(APIView):
         except Exception as e:
             print('error: ', e)
             return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework import status
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.http import HttpRequest
+from django.conf import settings
+
+class ForgotPasswordView(APIView):
+    @csrf_exempt
+    def post(self, request: HttpRequest):
+        data = request.data
+        no_siri = data.get('NoSiri')
+        email = data.get('Email')
+
+        if not no_siri or not email:
+            return Response({'error': 'NoSiri and Email are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Fetch the officer's email based on NoSiri
+            with connections['default'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT Email FROM officer WHERE NoSiri = %s
+                """, [no_siri])
+                result = cursor.fetchone()
+
+            if result:
+                existing_email = result[0]
+
+                if existing_email == email:
+                    # Generate the reset token
+                    token = generate_token(no_siri)
+
+                    # Generate reset link
+                    reset_link = request.build_absolute_uri(reverse('reset_password', args=[token]))
+
+                    # Send the email with the reset link
+                    send_mail(
+                        'Reset Kata Laluan - EKad Kuasa',
+                        f'Sila klik pautan ini untuk menetapkan kata laluan baru anda:\n{reset_link}',
+                        settings.EMAIL_HOST_USER, 
+                        [email],
+                        fail_silently=False,
+                    )
+                    return Response({'message': 'We\'ve sent you an email'}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': 'Invalid Email'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'No. Siri not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+        except Exception as e:
+            print('error: ', e)
+            return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

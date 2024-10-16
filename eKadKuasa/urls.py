@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from . import views
 from .views import OfficerListView
 from django.conf.urls import handler404, handler500
-from .views import OfficerRecordListView, OfficerRecordDetailView, UserSignUpView, OfficerLoginAPI, OfficerDataView, RecordView
+from .views import OfficerRecordListView, OfficerRecordDetailView, UserSignUpView, OfficerLoginAPI, OfficerDataView, RecordView, ForgotPasswordView
 
 handler404 = 'digitalProject.views.k'
 handler500 = 'ekadkuasa.views.p'
@@ -42,6 +42,7 @@ urlpatterns = [
     path('api/login/', OfficerLoginAPI.as_view(), name='login_api'),
     path('api/officer/<str:no_siri>/', OfficerDataView.as_view(), name='officer_data'),
     path('api/recordView/<str:no_siri>/', RecordView.as_view(), name='record_view'),
+    path('api/forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
     #path('api/officers/', OfficerListView.as_view(), name='officer_list_api'),
     #path('api/officer_login/', views.officer_login, name='officer_login'),
     #path('api/user_sign_up/', views.user_sign_up, name='user_sign_up'),
